@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YouTube Studio</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Condensed:wght@500;600;700&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+  <div id="chart-tooltip"></div>
+  <!-- TOP NAV -->
+  <nav class="top-nav">
+    <div class="nav-left">
+      <button class="icon-btn menu-btn" title="Menu">
+        <span class="material-icons" style="color: #ffffff;">menu</span>
+      </button>
+      <div class="logo-wrap">
+        <img src="assets/studio_full_logo_v2.png" alt="YouTube Studio" class="logo-full-img" />
+      </div>
+    </div>
+    <div class="nav-center">
+      <div class="search-bar">
+        <span class="material-icons search-icon">search</span>
+        <input type="text" placeholder="Search across your channel" class="search-input" />
+      </div>
+    </div>
+    <div class="nav-right">
+      <button class="icon-btn" title="Help">
+        <span class="material-icons">help_outline</span>
+      </button>
+      <button class="icon-btn" title="Notifications">
+        <span class="material-icons">notifications_none</span>
+      </button>
+      <div class="create-btn-wrap">
+        <button class="create-btn">
+          <span class="material-icons">video_call</span>
+          <span>Create</span>
+        </button>
+      </div>
+      <div class="nav-profile">
+        <img src="https://via.placeholder.com/32" alt="Avatar" class="avatar-circle" id="navAvatar"
+          title="Change profile picture" />
+        <input type="file" id="navAvatarInput" accept="image/*" style="display: none;" />
+      </div>
+    </div>
+  </nav>
+
+  <!-- BODY WRAPPER -->
+  <div class="app-body">
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+      <!-- Channel Info -->
+      <div class="sidebar-channel" style="padding-top: 24px; padding-bottom: 24px; position: relative;">
+        <div class="channel-avatar-wrap"
+          style="margin-bottom: 16px; position: relative; display: flex; justify-content: center;">
+          <div class="channel-avatar" id="channelAvatar"
+            style="border-radius: 50%; overflow: hidden; width: 112px; height: 112px; background: #fabc30; display: flex; align-items: center; justify-content: center; position: relative;">
+
+            <!-- Socialinsider geometric avatar -->
+            <svg viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+              <!-- Navy blocks -->
+              <rect x="25" y="45" width="15" height="55" fill="#1b1b22" />
+              <rect x="45" y="60" width="15" height="40" fill="#1b1b22" />
+              <rect x="65" y="55" width="15" height="45" fill="#1b1b22" />
+              <circle cx="52.5" cy="35" r="10" fill="#1b1b22" />
+            </svg>
+
+            <!-- View channel on YouTube overlay -->
+            <div class="avatar-overlay-text"
+              style="position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.5); font-size: 10px; color: #fff; text-align: center; padding: 4px 0; font-weight: 500;">
+              View channel on YouTube
+            </div>
+          </div>
+        </div>
+        <div class="channel-name-wrap" style="text-align: center;">
+          <div class="channel-label" id="channelLabel" data-persist-id="channelLabel" contenteditable="true"
+            spellcheck="false" style="font-size: 15px; font-weight: 500; color: #ffffff;">Your channel</div>
+
+          <div class="channel-name editable-field" id="channelName" data-persist-id="channelName" contenteditable="true"
+            spellcheck="false" style="font-size: 13px; color: #aaaaaa; margin-top:4px;">
+            Socialinsider</div>
+        </div>
+        <input type="file" id="avatarInput" style="display:none" accept="image/*">
+
+      </div>
+      <!-- Nav Items -->
+      <nav class="sidebar-nav">
+        <a class="nav-item" data-tab="dashboard" href="#">
+          <span class="material-icons">grid_view</span>
+          <span>Dashboard</span>
+        </a>
+        <a class="nav-item" data-tab="content" href="#">
+          <span class="material-icons">video_library</span>
+          <span>Content</span>
+        </a>
+        <a class="nav-item active" data-tab="analytics" href="#">
+          <span class="material-icons">bar_chart</span>
+          <span>Analytics</span>
+        </a>
+        <a class="nav-item" data-tab="community" href="#">
+          <span class="material-icons">people</span>
+          <span>Community</span>
+        </a>
+        <a class="nav-item" data-tab="subtitles" href="#">
+          <span class="material-icons">subtitles</span>
+          <span>Subtitles</span>
+        </a>
+        <a class="nav-item" data-tab="copyright" href="#">
+          <span class="material-icons">copyright</span>
+          <span>Content detection</span>
+        </a>
+        <a class="nav-item" data-tab="earn" href="#">
+          <span class="material-icons">monetization_on</span>
+          <span>Earn</span>
+        </a>
+        <a class="nav-item" data-tab="customisation" href="#">
+          <span class="material-icons">auto_fix_high</span>
+          <span>Customization</span>
+        </a>
+        <a class="nav-item" data-tab="audiolibrary" href="#">
+          <span class="material-icons">library_music</span>
+          <span>Audio library</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <hr class="sidebar-divider" style="margin-bottom: 8px;" />
+        <a class="nav-item" href="#">
+          <span class="material-icons" style="font-size: 20px;">settings</span>
+          <span>Settings</span>
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-icons" style="font-size: 20px;">feedback</span>
+          <span>Send feedback</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- ===== ANALYTICS TAB ===== -->
+      <section class="tab-panel active" id="tab-analytics">
+        <div class="analytics-full-header">
+          <!-- Title + controls in one row -->
+          <div class="analytics-title-controls-row">
+            <h1 class="section-title">Channel analytics</h1>
+            <div class="rt-header-controls">
+              <button class="advanced-mode-pill" id="advancedModeBtn">Advanced mode</button>
+              <div class="date-range-block-rt">
+                <div class="date-range-label-rt" id="dateRangeLabel" contenteditable="true" spellcheck="false"
+                  data-persist-id="dateRangeLabel">Dec 24, 2024 – Jan 20, 2025</div>
+                <div class="date-range-bottom">
+                  <select class="styled-select" id="dateRangeSelect">
+                    <option value="last28" selected>Last 28 days</option>
+                    <option value="last7">Last 7 days</option>
+                    <option value="last90">Last 90 days</option>
+                    <option value="last365">Last 365 days</option>
+                    <option value="lifetime">Lifetime</option>
+                  </select>
+                  <span class="material-icons date-chevron" style="font-size: 20px;">expand_more</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Tabs below -->
+          <div class="analytics-tabs-row">
+            <div class="sub-tabs">
+              <button class="sub-tab active" data-subtab="overview">Overview</button>
+              <button class="sub-tab" data-subtab="content">Content</button>
+              <button class="sub-tab" data-subtab="audience">Audience</button>
+              <button class="sub-tab" data-subtab="revenue">Revenue</button>
+              <button class="sub-tab" data-subtab="trends">Trends</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="analytics-layout">
+          <!-- Analytics Main -->
+          <div class="analytics-main">
+
+            <!-- Sub Tab Panels -->
+            <div class="sub-panel active" id="subtab-overview">
+
+              <div class="headline-stat">
+                Your channel got <span class="headline-editable" id="headlineViews" data-persist-id="headlineViews"
+                  contenteditable="true" spellcheck="false" style="border:none;">15,832</span> views in the last 28 days
+              </div>
+
+
+
+              <!-- Unified Overview Card -->
+              <div class="overview-unified-card">
+                <!-- Stat Cards -->
+                <div class="stat-cards">
+                  <div class="stat-card active-card">
+                    <div class="stat-card-inner">
+                      <div class="stat-label">Views</div>
+                      <div class="stat-value-row">
+                        <div class="stat-value editable-stat" id="statViews" data-persist-id="statViews"
+                          contenteditable="true" spellcheck="false">15.8K</div>
+
+                        <span class="stat-indicator-circle green"><span
+                            class="material-icons ind-icon">arrow_upward</span></span>
+                      </div>
+                      <div class="stat-compare"><i class="editable-stat" data-persist-id="compareViews"
+                          contenteditable="true" spellcheck="false">2.2K
+                          more than usual</i></div>
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-card-inner">
+                      <div class="stat-label">Watch time (hours)</div>
+                      <div class="stat-value-row">
+                        <div class="stat-value editable-stat" id="statWatchTime" data-persist-id="statWatchTime"
+                          contenteditable="true" spellcheck="false">191.4</div>
+
+                        <span class="stat-indicator-circle green"><span
+                            class="material-icons ind-icon">arrow_upward</span></span>
+                      </div>
+                      <div class="stat-compare"><i class="editable-stat" data-persist-id="compareWatchTime"
+                          contenteditable="true" spellcheck="false">1.4
+                          more than usual</i></div>
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-card-inner">
+                      <div class="stat-label">Subscribers</div>
+                      <div class="stat-value-row">
+                        <div class="stat-value editable-stat" id="statSubscribers" data-persist-id="statSubscribers"
+                          contenteditable="true" spellcheck="false">+35</div>
+
+                        <span class="stat-indicator-hollow green-check"><span class="material-icons ind-icon"
+                            style="font-size: 20px; color: var(--accent-green);">check_circle_outline</span></span>
+                      </div>
+                      <div class="stat-compare"><i class="editable-stat" data-persist-id="compareSubscribers"
+                          contenteditable="true" spellcheck="false">About
+                          the same as usual</i></div>
+                    </div>
+                  </div>
+                  <div class="stat-card stat-card-last" id="cardRevenue">
+                    <div class="stat-card-inner">
+                      <div class="stat-label">Estimated revenue</div>
+                      <div class="stat-value-row">
+                        <div class="stat-value editable-stat" id="statRevenue" data-persist-id="statRevenue"
+                          contenteditable="true" spellcheck="false">—</div>
+
+                        <span class="stat-indicator-circle green"><span
+                            class="material-icons ind-icon">arrow_upward</span></span>
+                      </div>
+                      <div class="stat-compare"></div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <!-- Chart -->
+                <div class="chart-container" style="padding-bottom: 24px;">
+                  <canvas id="analyticsChart"></canvas>
+                  <div class="chart-tooltip-dot" id="chartDot"></div>
+
+                  <div class="chart-tooltip-dot" id="chartDot"></div>
+                </div>
+                <div class="see-more-pill-row">
+                  <button class="pill-btn see-more-btn">See more</button>
+                </div>
+              </div>
+            </div>
+
+
+
+            <!-- Top Content -->
+            <div class="top-content-section">
+              <h2 class="top-content-title">Your top content in this period</h2>
+              <table class="top-content-table">
+                <thead>
+                  <tr>
+                    <th class="col-num"></th>
+                    <th class="col-thumb"></th>
+                    <th class="col-title">Content</th>
+                    <th class="col-duration">Average view<br />duration</th>
+                    <th class="col-views">Views</th>
+                  </tr>
+                </thead>
+                <tbody id="topContentBody"></tbody>
+              </table>
+            </div>
+
+
+            <!-- Content Sub Tab -->
+            <div class="sub-panel" id="subtab-content">
+              <div class="overview-unified-card">
+                <div class="stat-cards">
+                  <div class="stat-card active-card">
+                    <div class="stat-label">Impressions</div>
+                    <div class="stat-value editable-stat" contenteditable="true" spellcheck="false">1.2K</div>
+
+                    <div class="stat-compare editable-stat" contenteditable="true" spellcheck="false">Same as usual
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-label">Impressions CTR</div>
+                    <div class="stat-value editable-stat" contenteditable="true" spellcheck="false">5.8%</div>
+                    <div class="stat-compare"><i class="editable-stat" data-persist-id="compareRevenue"
+                        contenteditable="true" spellcheck="false">About
+                        the same as usual</i></div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-label">Views</div>
+                    <div class="stat-value editable-stat" contenteditable="true" spellcheck="false">15.8K</div>
+                    <div class="stat-compare editable-stat" contenteditable="true" spellcheck="false">2.2K more than
+                      usual</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-label">Avg. view duration</div>
+                    <div class="stat-value editable-stat" contenteditable="true" spellcheck="false">3:12</div>
+                    <div class="stat-compare editable-stat" contenteditable="true" spellcheck="false">About the same
+                      as
+                      usual</div>
+                  </div>
+                </div>
+                <div class="chart-container" style="margin-top:0"><canvas id="contentChart"></canvas></div>
+                <div class="see-more-pill-row">
+                  <button class="pill-btn see-more-btn">See more</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Audience Sub Tab -->
+            <div class="sub-panel" id="subtab-audience">
+              <div class="overview-unified-card">
+                <div class="stat-cards">
+                  <div class="stat-card active-card">
+                    <div class="stat-label">Unique viewers</div>
+                    <div class="stat-value editable-stat" contenteditable="true" spellcheck="false">9.2K</div>
+                    <div class="stat-compare editable-stat" contenteditable="true" spellcheck="false">About the same
+                      as
+                      usual</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-label">Subscribers</div>
+                    <div class="stat-value editable-stat" contenteditable="true" spellcheck="false">4,797</div>
+                    <div class="stat-compare editable-stat" contenteditable="true" spellcheck="false">+35 this
+                      period
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-label">Returning viewers</div>
+                    <div class="stat-value editable-stat" contenteditable="true" spellcheck="false">68%</div>
+                    <div class="stat-compare editable-stat" contenteditable="true" spellcheck="false">3% more than
+                      usual
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-label">New viewers</div>
+                    <div class="stat-value editable-stat" contenteditable="true" spellcheck="false">32%</div>
+                    <div class="stat-compare editable-stat" contenteditable="true" spellcheck="false">3% less than
+                      usual
+                    </div>
+                  </div>
+                </div>
+                <div class="chart-container" style="margin-top:0"><canvas id="audienceChart"></canvas></div>
+                <div class="see-more-pill-row">
+                  <button class="pill-btn see-more-btn">See more</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Revenue Sub Tab -->
+            <div class="sub-panel" id="subtab-revenue">
+              <div class="overview-unified-card">
+                <div class="stat-cards">
+                  <div class="stat-card revenue-card active-card">
+                    <div class="stat-label">Est. revenue</div>
+                    <div class="stat-value editable-stat revenue-value" contenteditable="true" spellcheck="false">—
+                    </div>
+                    <div class="stat-compare editable-stat" contenteditable="true" spellcheck="false">Not available
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-label">Ad revenue</div>
+                    <div class="stat-value editable-stat" contenteditable="true" spellcheck="false">—</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-label">YouTube Premium</div>
+                    <div class="stat-value editable-stat" contenteditable="true" spellcheck="false">—</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-label">RPM</div>
+                    <div class="stat-value editable-stat revenue-value" contenteditable="true" spellcheck="false">—
+                    </div>
+                  </div>
+                </div>
+                <div class="chart-container" style="margin-top:0"><canvas id="revenueChart"></canvas></div>
+                <div class="see-more-pill-row">
+                  <button class="pill-btn see-more-btn">See more</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trends Sub Tab -->
+            <div class="sub-panel" id="subtab-trends">
+              <div class="placeholder-panel">
+                <h2 style="font-size:15px;font-weight:400;margin-bottom:12px;color:var(--text-primary)">Trends</h2>
+                <p class="muted-text">Discover trending topics and search terms in your niche.</p>
+                <div class="research-table" style="margin-top:20px">
+                  <table class="top-content-table">
+                    <thead>
+                      <tr>
+                        <th style="text-align:left">Search term</th>
+                        <th>Search interest</th>
+                        <th>Your content</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td contenteditable="true" spellcheck="false">content studio tips</td>
+                        <td contenteditable="true" spellcheck="false" style="text-align:right">Very high</td>
+                        <td contenteditable="true" spellcheck="false" style="text-align:right">2 videos</td>
+                      </tr>
+                      <tr>
+                        <td contenteditable="true" spellcheck="false">how to hide likes</td>
+                        <td contenteditable="true" spellcheck="false" style="text-align:right">High</td>
+                        <td contenteditable="true" spellcheck="false" style="text-align:right">1 video</td>
+                      </tr>
+                      <tr>
+                        <td contenteditable="true" spellcheck="false">tiktok collab</td>
+                        <td contenteditable="true" spellcheck="false" style="text-align:right">High</td>
+                        <td contenteditable="true" spellcheck="false" style="text-align:right">2 videos</td>
+                      </tr>
+                      <tr>
+                        <td contenteditable="true" spellcheck="false">getting started youtube</td>
+                        <td contenteditable="true" spellcheck="false" style="text-align:right">Medium</td>
+                        <td contenteditable="true" spellcheck="false" style="text-align:right">1 video</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div> <!-- End analytics-main -->
+
+          <!-- Analytics Right Panel -->
+          <aside class="analytics-right">
+
+            <div class="right-card realtime-card">
+              <div class="rt-title-row">
+                <h3 class="rt-title">Realtime</h3>
+              </div>
+              <div class="rt-subtitle">
+                <div class="live-dot pulse"></div>
+                <span style="font-size: 13px; color: #aaaaaa;">Updating live</span>
+              </div>
+              <div class="divider-line"></div>
+
+              <!-- Realtime Subscribers -->
+              <div class="rt-subs-block">
+                <div class="rt-big-num editable-stat" id="realtimeSubs" data-persist-id="realtimeSubs"
+                  contenteditable="true" spellcheck="false">4,797
+                </div>
+                <div class="rt-num-label">Subscribers</div>
+                <button class="see-live-count-btn" style="margin-top:12px;">See live count</button>
+              </div>
+
+              <div class="divider-line"></div>
+              <!-- Realtime Views -->
+              <div class="rt-views-block">
+                <div class="rt-med-num editable-stat" id="realtimeViews" data-persist-id="realtimeViews"
+                  contenteditable="true" spellcheck="false">1,545
+                </div>
+                <div class="rt-views-label">Views · Last 48 hours</div>
+
+                <div class="mini-chart-wrap" style="height: 60px; width: 100%; box-sizing: border-box; margin-top:8px;">
+                  <canvas id="miniChart"></canvas>
+                </div>
+
+                <div class="mini-chart-labels">
+                  <span>-48h</span>
+                  <span>Now</span>
+                </div>
+              </div>
+
+              <!-- Top Content List -->
+              <div class="rt-top-content">
+                <div class="rt-top-content-header"
+                  style="justify-content: space-between; margin-bottom: 12px; margin-top:24px;">
+                  <span style="color:#aaaaaa; font-size:12px;">Top content</span>
+                  <span style="color:#aaaaaa; font-size:12px;">Views</span>
+                </div>
+                <div class="rt-content-list" id="rtContentList">
+                  <!-- Row 1 -->
+                  <div class="rt-item">
+                    <div class="rt-thumb rt-thumb-custom" data-persist-id="rtThumb0" id="rtThumb0"
+                      style="background: linear-gradient(135deg, #e74c3c, #c0392b); flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                      <span class="material-icons rt-thumb-play" style="color:#fff; font-size:14px;">play_arrow</span>
+                    </div>
+                    <input type="file" id="rtThumbInput0" accept="image/*" style="display:none">
+                    <span class="rt-item-title editable-stat" contenteditable="true" spellcheck="false">How to Hide
+                      Likes on Inst...</span>
+                    <span class="rt-item-views" id="rtv0" data-persist-id="rtv0">1,010</span>
+                  </div>
+                  <!-- Row 2 -->
+                  <div class="rt-item">
+                    <div class="rt-thumb rt-thumb-custom" data-persist-id="rtThumb1" id="rtThumb1"
+                      style="background: linear-gradient(135deg, #3498db, #1a5276); flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                      <span class="material-icons rt-thumb-play" style="color:#fff; font-size:14px;">play_arrow</span>
+                    </div>
+                    <input type="file" id="rtThumbInput1" accept="image/*" style="display:none">
+                    <span class="rt-item-title editable-stat" contenteditable="true" spellcheck="false">How To Create
+                      TikTok Coll...</span>
+                    <span class="rt-item-views" id="rtv1" data-persist-id="rtv1">118</span>
+                  </div>
+                  <!-- Row 3 -->
+                  <div class="rt-item">
+                    <div class="rt-thumb rt-thumb-custom" data-persist-id="rtThumb2" id="rtThumb2"
+                      style="background: linear-gradient(135deg, #27ae60, #145a32); flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                      <span class="material-icons rt-thumb-play" style="color:#fff; font-size:14px;">play_arrow</span>
+                    </div>
+                    <input type="file" id="rtThumbInput2" accept="image/*" style="display:none">
+                    <span class="rt-item-title editable-stat" contenteditable="true" spellcheck="false">Getting
+                      started
+                      with Content...</span>
+                    <span class="rt-item-views" id="rtv2" data-persist-id="rtv2">39</span>
+                  </div>
+                  <div class="divider-line"></div>
+                  <a href="#" class="blue-link"
+                    style="display:inline-block; margin-top:20px; font-size:13px; font-weight:500; letter-spacing:0.5px;">SEE
+                    MORE</a>
+                </div>
+              </div>
+
+            </div>
+          </aside>
+        </div>
+      </section>
+
+
+      <!-- ===== DASHBOARD TAB ===== -->
+      <section class="tab-panel" id="tab-dashboard">
+        <div class="centred-panel">
+          <h1 class="section-title">Dashboard</h1>
+          <div class="dashboard-grid">
+            <div class="dash-card">
+              <h3>Latest video performance</h3>
+              <p class="dash-subtitle editable-stat" contenteditable="true" spellcheck="false">How to Hide Likes on
+                Instagram in 2025</p>
+              <div class="dash-stats">
+                <div class="dash-stat"><span class="ds-val editable-stat" contenteditable="true"
+                    spellcheck="false">1,010</span><span class="ds-label">Views</span></div>
+                <div class="dash-stat"><span class="ds-val editable-stat" contenteditable="true"
+                    spellcheck="false">3:12</span><span class="ds-label">Avg duration</span></div>
+                <div class="dash-stat"><span class="ds-val editable-stat revenue-value" contenteditable="true"
+                    spellcheck="false">—</span><span class="ds-label">Est. revenue</span></div>
+              </div>
+            </div>
+            <div class="dash-card">
+              <h3>Channel analytics</h3>
+              <div class="dash-stats">
+                <div class="dash-stat"><span class="ds-val editable-stat" contenteditable="true"
+                    spellcheck="false">15.8K</span><span class="ds-label">Views (28 days)</span></div>
+                <div class="dash-stat"><span class="ds-val editable-stat" contenteditable="true"
+                    spellcheck="false">4,797</span><span class="ds-label">Subscribers</span></div>
+                <div class="dash-stat"><span class="ds-val editable-stat revenue-value" contenteditable="true"
+                    spellcheck="false">—</span><span class="ds-label">Est. revenue</span></div>
+              </div>
+            </div>
+            <div class="dash-card news-card">
+              <h3>News from YouTube</h3>
+              <div class="news-items">
+                <div class="news-item"><span class="material-icons news-icon">campaign</span>
+                  <p contenteditable="true" spellcheck="false">YouTube is expanding monetization to more creators
+                    globally.</p>
+                </div>
+                <div class="news-item"><span class="material-icons news-icon">new_releases</span>
+                  <p contenteditable="true" spellcheck="false">New Trends tab is now available in Studio Analytics.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== CONTENT TAB ===== -->
+      <section class="tab-panel" id="tab-content">
+        <div class="centred-panel">
+          <h1 class="section-title">Channel content</h1>
+          <div class="content-filters">
+            <button class="filter-btn active-filter">Videos</button>
+            <button class="filter-btn">Shorts</button>
+            <button class="filter-btn">Live</button>
+            <button class="filter-btn">Posts</button>
+            <button class="filter-btn">Podcasts</button>
+          </div>
+          <table class="content-table">
+            <thead>
+              <tr>
+                <th>Video</th>
+                <th>Visibility</th>
+                <th>Date</th>
+                <th>Views</th>
+                <th>Comments</th>
+                <th>Likes</th>
+                <th>Est. revenue</th>
+              </tr>
+            </thead>
+            <tbody id="contentTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== COMMUNITY TAB ===== -->
+      <section class="tab-panel" id="tab-community">
+        <div class="centred-panel">
+          <h1 class="section-title">Community</h1>
+          <div class="comment-filters">
+            <button class="filter-btn active-filter">Comments</button>
+            <button class="filter-btn">Mentions</button>
+            <button class="filter-btn">Live chat</button>
+          </div>
+          <div class="comments-list" id="commentsList"></div>
+        </div>
+      </section>
+
+      <!-- ===== SUBTITLES TAB ===== -->
+      <section class="tab-panel" id="tab-subtitles">
+        <div class="centred-panel">
+          <h1 class="section-title">Subtitles</h1>
+          <p class="muted-text">Manage subtitles and closed captions for your videos.</p>
+          <table class="content-table">
+            <thead>
+              <tr>
+                <th>Video</th>
+                <th>Published</th>
+                <th>Language</th>
+                <th>Status</th>
+                <th>Last updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td contenteditable="true" spellcheck="false">How to Hide Likes on Instagram</td>
+                <td contenteditable="true" spellcheck="false">Jan 15, 2025</td>
+                <td contenteditable="true" spellcheck="false">English</td>
+                <td><span class="badge-green">Published</span></td>
+                <td contenteditable="true" spellcheck="false">Jan 16, 2025</td>
+              </tr>
+              <tr>
+                <td contenteditable="true" spellcheck="false">How To Create TikTok Collabs</td>
+                <td contenteditable="true" spellcheck="false">Jan 8, 2025</td>
+                <td contenteditable="true" spellcheck="false">English</td>
+                <td><span class="badge-green">Published</span></td>
+                <td contenteditable="true" spellcheck="false">Jan 9, 2025</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== COPYRIGHT TAB ===== -->
+      <section class="tab-panel" id="tab-copyright">
+        <div class="centred-panel">
+          <h1 class="section-title">Copyright</h1>
+          <p class="muted-text">No copyright issues detected on your channel.</p>
+          <div class="empty-state">
+            <span class="material-icons empty-icon">gpp_good</span>
+            <p>Your content is copyright claim-free</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== EARN TAB ===== -->
+      <section class="tab-panel" id="tab-earn">
+        <div class="centred-panel">
+          <h1 class="section-title">Earn</h1>
+          <div class="monetization-status">
+            <div class="mono-badge enabled">
+              <span class="material-icons">monetization_on</span>
+              <span>Monetization enabled</span>
+            </div>
+          </div>
+          <div class="dash-grid-2">
+            <div class="dash-card">
+              <h3>Estimated revenue this month</h3>
+              <div class="big-revenue editable-stat revenue-value" id="statRevenueMonth"
+                data-persist-id="statRevenueMonth" contenteditable="true" spellcheck="false">$0.00</div>
+              <p class="muted-text">Updated daily · based on estimated rates</p>
+            </div>
+            <div class="dash-card">
+              <h3>Revenue breakdown</h3>
+              <div class="rev-breakdown">
+                <div class="rev-row"><span>Ad revenue</span><span class="editable-stat" id="statAdRev"
+                    data-persist-id="statAdRev" contenteditable="true" spellcheck="false">$0.00</span></div>
+                <div class="rev-row"><span>YouTube Premium</span><span class="editable-stat" id="statPremRev"
+                    data-persist-id="statPremRev" contenteditable="true" spellcheck="false">$0.00</span></div>
+                <div class="rev-row"><span>Super Thanks</span><span class="editable-stat" id="statThanksRev"
+                    data-persist-id="statThanksRev" contenteditable="true" spellcheck="false">$0.00</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== CUSTOMIZATION TAB ===== -->
+      <section class="tab-panel" id="tab-customization">
+        <div class="centred-panel">
+          <h1 class="section-title">Channel customization</h1>
+          <div class="custom-tabs">
+            <button class="filter-btn active-filter">Layout</button>
+            <button class="filter-btn">Branding</button>
+            <button class="filter-btn">Basic info</button>
+          </div>
+          <div class="custom-section">
+            <h3>Channel name</h3>
+            <input type="text" class="custom-input" id="customChannelName" value="ContentStudio" />
+          </div>
+          <div class="custom-section">
+            <h3>Channel description</h3>
+            <textarea class="custom-textarea"
+              id="customDescription">Helping creators grow on YouTube and social media. Tips, tutorials, and strategies for content creators.</textarea>
+          </div>
+          <div class="custom-section">
+            <h3>Channel URL</h3>
+            <input type="text" class="custom-input" value="youtube.com/@ContentStudio" />
+          </div>
+          <button class="save-btn-pill">Publish</button>
+        </div>
+      </section>
+
+      <!-- ===== SETTINGS TAB ===== -->
+      <section class="tab-panel" id="tab-settings">
+        <div class="centred-panel">
+          <h1 class="section-title">Settings</h1>
+          <div class="settings-group">
+            <h3>Channel</h3>
+            <div class="setting-row"><label>Country of residence</label><select class="inline-select">
+                <option>Australia</option>
+                <option>United States</option>
+                <option>United Kingdom</option>
+                <option>Canada</option>
+              </select></div>
+            <div class="setting-row"><label>Keywords</label><input type="text" class="custom-input"
+                value="content studio, youtube tips, social media" /></div>
+          </div>
+          <div class="settings-group">
+            <h3>Upload defaults</h3>
+            <div class="setting-row"><label>Default language</label><select class="inline-select">
+                <option>English</option>
+                <option>Spanish</option>
+                <option>French</option>
+              </select></div>
+            <div class="setting-row"><label>Default category</label><select class="inline-select">
+                <option>Science &amp; Technology</option>
+                <option>Education</option>
+                <option>Entertainment</option>
+              </select></div>
+          </div>
+          <button class="save-btn-pill">Save</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Profile Modal -->
+  <div class="modal-overlay" id="profileModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Edit profile</h2>
+        <button class="modal-close" id="closeModal"><span class="material-icons">close</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-avatar-section">
+          <div class="modal-avatar" id="modalAvatarPreview">
+            <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg"
+              style="width:100%;height:100%;border-radius:50%">
+              <defs>
+                <linearGradient id="mod-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#4285f4" />
+                  <stop offset="100%" style="stop-color:#0f9d58" />
+                </linearGradient>
+              </defs>
+              <rect width="90" height="90" fill="url(#mod-grad)" rx="45" />
+              <g stroke="#fff" stroke-width="3.5" fill="none" stroke-linecap="round">
+                <path d="M18 31 Q30 23 42 31 Q54 39 66 31 Q78 23 90 31" />
+                <path d="M18 45 Q30 37 42 45 Q54 53 66 45 Q78 37 90 45" />
+                <path d="M18 59 Q30 51 42 59 Q54 67 66 59 Q78 51 90 59" />
+              </g>
+            </svg>
+          </div>
+          <label class="upload-label" for="avatarInput2">
+            <span class="material-icons">photo_camera</span> Change photo
+          </label>
+          <input type="file" id="avatarInput2" accept="image/*" style="display:none" />
+        </div>
+        <div class="modal-field">
+          <label>Channel name</label>
+          <input type="text" id="modalChannelName" class="custom-input" value="ContentStudio" />
+        </div>
+        <div class="modal-field">
+          <label>Handle</label>
+          <input type="text" id="modalHandle" class="custom-input" value="@ContentStudio" />
+        </div>
+        <div class="modal-field">
+          <label>Description</label>
+          <textarea class="custom-textarea"
+            id="modalDescription">Helping creators grow on YouTube and social media.</textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="cancel-btn" id="cancelModal">Cancel</button>
+        <button class="save-btn" id="saveProfile">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
+<div id="chartEditOverlay" class="chart-edit-overlay" style="display:none;">
+  <div class="chart-edit-modal">
+    <h3>Edit Chart Data (28 days)</h3>
+    <p>Enter one number per line for each of the 28 days.</p>
+    <textarea id="chartDataInput"></textarea>
+    <div class="chart-edit-actions">
+      <button id="cancelBtn">Cancel</button>
+      <button id="saveChartBtn">Save</button>
+    </div>
+  </div>
+</div>
