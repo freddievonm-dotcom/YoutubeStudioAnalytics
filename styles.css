@@ -633,7 +633,7 @@ select {
   display: block;
 }
 
-/* Date Range — right-aligned block with date + dropdown */
+/* Date Range â€” right-aligned block with date + dropdown */
 .date-range-row {
   display: flex;
   justify-content: flex-end;
@@ -982,6 +982,7 @@ select {
   position: relative;
   height: 200px;
 }
+
 
 
 .blue-link {
@@ -2061,29 +2062,33 @@ select {
 #chart-tooltip {
   opacity: 0;
   position: absolute;
-  background: #212121;
-  border-radius: 8px;
+  background: #121212;
+  border-radius: 4px;
   color: white;
-  padding: 8px 12px;
+  padding: 10px 14px;
   pointer-events: none;
   transition: opacity 0.1s ease;
   z-index: 3000;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  min-width: 120px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  min-width: 140px;
 }
 
 .tooltip-date {
   font-size: 13px;
   color: #fff;
   font-weight: 500;
-  margin-bottom: 6px;
+  margin-bottom: 2px;
+  font-family: var(--font);
 }
 
 .tooltip-value {
-  font-size: 24px;
+  font-size: 25px;
   font-weight: 400;
-  color: var(--accent-blue);
+  color: #fff;
+  /* Default white, overridden inline in JS */
+  letter-spacing: -0.5px;
+  font-family: var(--font);
 }
 
 .chart-crosshair {
@@ -2201,4 +2206,97 @@ select {
 
 #saveChartBtn:hover {
   background: #fff;
+}
+
+
+/* ===== VIDEO ANALYTICS DRILL-DOWN ===== */
+.video-analytics-header {
+  padding: 16px 24px;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.va-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.back-link-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  transition: color 0.2s;
+  padding: 4px 0;
+}
+
+.back-link-btn:hover {
+  color: var(--text-primary);
+}
+
+.va-video-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.va-thumb {
+  width: 120px;
+  height: 68px;
+  background: var(--surface);
+  border-radius: 2px;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.va-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.va-video-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.va-video-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.va-header-right {
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+}
+
+.va-sub-tabs {
+  margin-bottom: -16px;
+  /* Align with bottom of header */
+}
+
+.va-realtime-card {
+  background: var(--bg-hover);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.va-realtime-card .rt-big-num {
+  font-size: 32px;
+  font-weight: 500;
+  margin: 12px 0 4px;
 }
