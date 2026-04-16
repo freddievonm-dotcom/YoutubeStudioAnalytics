@@ -263,10 +263,8 @@
 
 
                 <!-- Chart -->
-                <div class="chart-container" style="padding-bottom: 24px;">
+                <div class="chart-container">
                   <canvas id="analyticsChart"></canvas>
-                  <div class="chart-tooltip-dot" id="chartDot"></div>
-
                   <div class="chart-tooltip-dot" id="chartDot"></div>
                 </div>
                 <div class="see-more-pill-row">
@@ -505,7 +503,8 @@
                     <input type="file" id="rtThumbInput0" accept="image/*" style="display:none">
                     <span class="rt-item-title editable-stat" contenteditable="true" spellcheck="false">How to Hide
                       Likes on Inst...</span>
-                    <span class="rt-item-views" id="rtv0" data-persist-id="rtv0">1,010</span>
+                    <span class="rt-item-views editable-stat" id="rtv0" data-persist-id="rtv0" contenteditable="true"
+                      spellcheck="false">1,010</span>
                   </div>
                   <!-- Row 2 -->
                   <div class="rt-item">
@@ -516,7 +515,8 @@
                     <input type="file" id="rtThumbInput1" accept="image/*" style="display:none">
                     <span class="rt-item-title editable-stat" contenteditable="true" spellcheck="false">How To Create
                       TikTok Coll...</span>
-                    <span class="rt-item-views" id="rtv1" data-persist-id="rtv1">118</span>
+                    <span class="rt-item-views editable-stat" id="rtv1" data-persist-id="rtv1" contenteditable="true"
+                      spellcheck="false">118</span>
                   </div>
                   <!-- Row 3 -->
                   <div class="rt-item">
@@ -528,7 +528,8 @@
                     <span class="rt-item-title editable-stat" contenteditable="true" spellcheck="false">Getting
                       started
                       with Content...</span>
-                    <span class="rt-item-views" id="rtv2" data-persist-id="rtv2">39</span>
+                    <span class="rt-item-views editable-stat" id="rtv2" data-persist-id="rtv2" contenteditable="true"
+                      spellcheck="false">39</span>
                   </div>
                   <div class="divider-line"></div>
                   <a href="#" class="blue-link"
@@ -614,6 +615,104 @@
             </thead>
             <tbody id="contentTableBody"></tbody>
           </table>
+        </div>
+      </section>
+
+      <!-- ===== VIDEO ANALYTICS PANEL (Drill-down) ===== -->
+      <section class="tab-panel" id="tab-video-analytics">
+        <div class="video-analytics-header">
+          <div class="va-header-left">
+            <button class="back-link-btn" id="backToChannelContent">
+              <span class="material-icons">arrow_back</span>
+              <span>Channel content</span>
+            </button>
+            <div class="va-video-info">
+              <div class="va-thumb" id="vaHeaderThumb"></div>
+              <div class="va-title-wrap">
+                <h1 class="va-video-title" id="vaHeaderTitle">Video title</h1>
+                <div class="va-video-status">
+                  <span class="material-icons" style="font-size:14px;color:#3ea6ff">check_circle</span>
+                  <span>Published</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="va-header-right">
+            <div class="sub-tabs va-sub-tabs">
+              <button class="sub-tab active" data-vsubtab="v-overview">Overview</button>
+              <button class="sub-tab" data-vsubtab="v-reach">Reach</button>
+              <button class="sub-tab" data-vsubtab="v-engagement">Engagement</button>
+              <button class="sub-tab" data-vsubtab="v-audience">Audience</button>
+              <button class="sub-tab" data-vsubtab="v-revenue">Revenue</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="analytics-layout">
+          <div class="analytics-main">
+            <div class="v-sub-panel active" id="vsubtab-v-overview">
+              <div class="overview-unified-card">
+                <div class="stat-cards">
+                  <div class="stat-card active-card">
+                    <div class="stat-card-inner">
+                      <div class="stat-label">Views</div>
+                      <div class="stat-value-row">
+                        <div class="stat-value" id="vStatViews">0</div>
+                        <span class="stat-indicator-circle green"><span
+                            class="material-icons ind-icon">arrow_upward</span></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-card-inner">
+                      <div class="stat-label">Watch time (hours)</div>
+                      <div class="stat-value-row">
+                        <div class="stat-value" id="vStatWatchTime">0.0</div>
+                        <span class="stat-indicator-circle green"><span
+                            class="material-icons ind-icon">arrow_upward</span></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-card-inner">
+                      <div class="stat-label">Subscribers</div>
+                      <div class="stat-value-row">
+                        <div class="stat-value" id="vStatSubs">+0</div>
+                        <span class="stat-indicator-hollow green-check"><span class="material-icons ind-icon"
+                            style="font-size: 20px; color: var(--accent-green);">check_circle_outline</span></span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="stat-card stat-card-last">
+                    <div class="stat-card-inner">
+                      <div class="stat-label">Estimated revenue</div>
+                      <div class="stat-value-row">
+                        <div class="stat-value">$0.00</div>
+                        <span class="stat-indicator-circle green"><span
+                            class="material-icons ind-icon">arrow_upward</span></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="chart-container">
+                  <canvas id="videoAnalyticsChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <aside class="analytics-right">
+            <div class="right-card va-realtime-card">
+              <h3 class="rt-title">Realtime</h3>
+              <div class="rt-big-num" id="vRealtimeViews">0</div>
+              <div class="rt-num-label">Views · Last 48 hours</div>
+              <div class="divider-line"></div>
+              <div class="rt-views-label">Reach</div>
+              <div class="rev-breakdown">
+                <div class="rev-row"><span>Impressions</span><span>1.2K</span></div>
+                <div class="rev-row"><span>CTR</span><span>5.8%</span></div>
+              </div>
+            </div>
+          </aside>
         </div>
       </section>
 
