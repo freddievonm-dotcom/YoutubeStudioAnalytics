@@ -2,7 +2,7 @@
 
 // Storage version guard: bump this to wipe stale localStorage on next load
 (function () {
-  const STORAGE_VERSION = '2';
+  const STORAGE_VERSION = '3';
   if (localStorage.getItem('yt_replica_version') !== STORAGE_VERSION) {
     // Clear all yt_replica_* keys
     Object.keys(localStorage)
@@ -101,7 +101,7 @@ const areaGradientPlugin = {
         const baseColor = dataset.borderColor;
 
         const colorWithAlpha = (alpha) => {
-          if (baseColor === '#5abaff') return `rgba(90, 186, 255, ${alpha})`;
+          if (baseColor === '#5abaff' || baseColor === '#3ea6ff') return `rgba(90, 186, 255, ${alpha})`;
           if (baseColor === '#2ba640') return `rgba(43, 166, 64, ${alpha})`;
           return baseColor;
         };
@@ -134,12 +134,17 @@ const externalTooltipHandler = (context) => {
     bodyLines.forEach((body, i) => {
       const valStr = body[0];
       const val = parseFloat(valStr.replace(/[^\d.]/g, ''));
-      const formattedVal = val.toLocaleString('en-US');
 
       // Check if revenue is the active metric
       const activeCard = document.querySelector('.stat-card.active-card');
       const isRevenue = activeCard && activeCard.querySelector('.stat-label').textContent === 'Estimated revenue';
-      const colorStyle = isRevenue ? 'style="color: #2ba640;"' : '';
+
+      // Revenue gets decimals and $
+      const formattedVal = isRevenue
+        ? val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        : val.toLocaleString('en-US');
+
+      const colorStyle = 'style="color: #5abaff;"';
       const prefix = isRevenue ? '$' : '';
 
       innerHtml += `<div class="tooltip-value" ${colorStyle}>${prefix}${formattedVal}</div>`;
@@ -253,7 +258,7 @@ function populateContentTable() {
   const tbody = document.getElementById('contentTableBody');
   if (!tbody) return;
   tbody.innerHTML = contentVideos.map((v, i) => `
-    <tr>
+    <tr class="content-video-row" data-video-index="${i}" style="cursor:pointer">
       <td>
         <div style="display:flex;align-items:center;gap:10px">
           <div class="thumb-placeholder-row" style="flex-shrink:0">
@@ -276,6 +281,88 @@ function populateContentTable() {
       <td contenteditable="true" spellcheck="false" class="editable-stat" data-persist-id="content_video_${i}_revenue" style="color:#a8c7fa">${v.revenue}</td>
     </tr>
   `).join('');
+
+  // Add click handlers
+  document.querySelectorAll('.content-video-row').forEach(row => {
+    row.addEventListener('click', (e) => {
+      // Don't trigger if clicking editable fields or select
+      if (e.target.closest('[contenteditable="true"]') || e.target.closest('.inline-select')) return;
+      const index = row.dataset.videoIndex;
+      showVideoAnalytics(contentVideos[index]);
+    });
+  });
+}
+
+function showVideoAnalytics(video) {
+  // Hide all panels
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+  // Show Video Analytics panel
+  const panel = document.getElementById('tab-video-analytics');
+  panel.classList.add('active');
+
+  // Update Header
+  document.getElementById('vaHeaderTitle').textContent = video.title;
+  const thumb = document.getElementById('vaHeaderThumb');
+  // Re-use RT thumb backgrounds or generic gradient
+  thumb.style.background = 'linear-gradient(135deg, #2c3e50, #000)';
+
+  // Populate Stats
+  document.getElementById('vStatViews').textContent = video.views;
+  document.getElementById('vRealtimeViews').textContent = video.views;
+  // Simulated watch time / subs
+  document.getElementById('vStatWatchTime').textContent = (parseFloat(video.views.replace(/,/g, '')) * 0.05).toFixed(1);
+  document.getElementById('vStatSubs').textContent = '+' + Math.floor(parseFloat(video.views.replace(/,/g, '')) * 0.005);
+
+  // Initialize Video Chart
+  initVideoChart(video);
+
+  window.scrollTo(0, 0);
+  showToast('Viewing video analytics');
+}
+
+function initVideoChart(video) {
+  const ctx = document.getElementById('videoAnalyticsChart');
+  if (!ctx) return;
+
+  // Cleanup old chart if exists
+  if (activeCharts['videoAnalyticsChart']) {
+    activeCharts['videoAnalyticsChart'].destroy();
+  }
+
+  const labels = generateLabels(28);
+  const data = generateDataThatSumsTo(video.views, 28);
+
+  activeCharts['videoAnalyticsChart'] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: data,
+        borderColor: '#5abaff',
+        backgroundColor: 'rgba(90, 186, 255, 0.05)',
+        borderWidth: 2, pointRadius: 0, fill: true, tension: 0
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          enabled: false,
+          external: externalTooltipHandler,
+          displayColors: false
+        }
+      },
+      scales: {
+        x: { display: true, grid: { display: false }, ticks: { maxTicksLimit: 5, font: { size: 11 }, color: '#717171' } },
+        y: { beginAtZero: true, display: true, position: 'right', grid: { display: true, color: 'rgba(255,255,255,0.05)', drawTicks: false }, ticks: { font: { size: 11 }, color: '#717171', maxTicksLimit: 4 } }
+      }
+    },
+    plugins: [crosshairPlugin, neonGlowPlugin, areaGradientPlugin]
+  });
 }
 
 // ===== COMMENTS =====
@@ -321,7 +408,6 @@ function generateDataThatSumsTo(totalStr, count = 28) {
 function generateMainChartData() {
   const base = 500;
   return Array.from({ length: 28 }, (_, i) => {
-    if (i > 25) return null; // Tail off like real YT analytics
     return Math.round(base + (Math.random() - 0.5) * 400);
   });
 }
@@ -336,7 +422,7 @@ function setupStatCardInteractions(chart) {
     'Views': { color: '#5abaff', bg: 'rgba(90, 186, 255, 0.05)' },
     'Watch time (hours)': { color: '#5abaff', bg: 'rgba(90, 186, 255, 0.05)' },
     'Subscribers': { color: '#5abaff', bg: 'rgba(90, 186, 255, 0.05)' },
-    'Estimated revenue': { color: '#2ba640', bg: 'rgba(43, 166, 64, 0.05)' }
+    'Estimated revenue': { color: '#5abaff', bg: 'rgba(90, 186, 255, 0.05)' }
   };
 
   cards.forEach(card => {
@@ -389,7 +475,13 @@ function initCharts() {
     if (!ctx) return;
 
     const savedData = localStorage.getItem(`yt_replica_chart_${id}`);
-    const initialData = savedData ? JSON.parse(savedData) : generateMainChartData();
+    let initialData = savedData ? JSON.parse(savedData) : generateMainChartData();
+
+    // Sanitize: ensure no trailing nulls or accidental zeros from stale logic
+    initialData = initialData.map(v => (v === null || isNaN(v)) ? Math.round(500 + Math.random() * 200) : v);
+    if (initialData.length < 28) {
+      while (initialData.length < 28) initialData.push(Math.round(500 + Math.random() * 200));
+    }
 
     const chart = new Chart(ctx, {
       type: type,
@@ -501,13 +593,11 @@ function initCharts() {
 
 function generateLabels(count) {
   const labels = [];
-  const d = new Date(2026, 2, 7); // Start near the reference date: Mar 7, 2026
+  const d = new Date(2025, 4, 1); // Start in May 2025 to align with reference
   for (let i = 0; i < count; i++) {
-    // Format: "Mar 7, 2026"
-    const month = d.toLocaleDateString('en-US', { month: 'short' });
-    const day = d.getDate();
-    const year = d.getFullYear();
-    labels.push(`${month} ${day}, ${year}`);
+    // Format: "Mon, May 19, 2025"
+    const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+    labels.push(d.toLocaleDateString('en-US', options));
     d.setDate(d.getDate() + 1);
   }
   return labels;
@@ -790,6 +880,15 @@ function initLiveCounter() {
     if (Math.random() < 0.7) {
       const viewsAdded = Math.floor(Math.random() * 5) + 1;
       incrementEl(elViews, viewsAdded);
+
+      // Also update video analytics if active
+      const vVaViews = document.getElementById('vStatViews');
+      const vRtViews = document.getElementById('vRealtimeViews');
+      if (document.getElementById('tab-video-analytics').classList.contains('active')) {
+        incrementEl(vVaViews, viewsAdded);
+        incrementEl(vRtViews, viewsAdded);
+      }
+
       let remaining = viewsAdded;
       while (remaining > 0) {
         const r = Math.random();
@@ -811,6 +910,26 @@ function initLiveCounter() {
       miniChart.update('none');
     }
   }, 3600000); // 3,600,000 ms = 1 hour
+}
+
+function initVideoAnalyticsBack() {
+  document.getElementById('backToChannelContent')?.addEventListener('click', () => {
+    // Return to content tab
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-content').classList.add('active');
+    document.querySelector('.nav-item[data-tab="content"]').classList.add('active');
+  });
+}
+
+function initVideoAnalyticsSubTabs() {
+  document.querySelectorAll('.va-sub-tabs .sub-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.va-sub-tabs .sub-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      // For now, we only show Overview, but we can add more sub-panels if needed
+      showToast(`${tab.textContent} metrics coming soon for this video`);
+    });
+  });
 }
 
 function initEditableSelectAll() {
@@ -888,6 +1007,7 @@ function initTopContentThumbnails() {
   });
 }
 
+
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
   initEditableSelectAll();
@@ -908,4 +1028,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initSaveBtns();
   initCreateBtn();
   initPagination();
+  initVideoAnalyticsBack();
+  initVideoAnalyticsSubTabs();
 });
